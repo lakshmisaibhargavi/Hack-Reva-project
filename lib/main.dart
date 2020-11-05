@@ -1,485 +1,117 @@
-import 'dart:math' show pi;
-
 import 'package:flutter/material.dart';
-import 'package:imei_plugin/imei_plugin.dart';
-import 'package:line_icons/line_icons.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
         primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        fontFamily: 'Deligne',
-        textTheme: TextTheme(body1: TextStyle(fontSize: 28)),
+        // This makes the visual density adapt to the platform that you run
+        // the app on. For desktop platforms, the controls will be smaller and
+        // closer together (more dense) than on mobile platforms.
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-Color backgroundColor = Color.fromRGBO(130, 205, 113, 1);
-Color darkerColor = Color.fromRGBO(130, 205, 113, 1);
-
 class _MyHomePageState extends State<MyHomePage> {
-  ScrollController _scrollController;
+  int _counter = 0;
 
-  double get screenHeight => MediaQuery.of(context).size.height;
-
-  double get screenWidth => MediaQuery.of(context).size.width;
-  String id;
-  Future<void> getid() async {
-    id = await ImeiPlugin.getId();
-    print(id);
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
   }
-
-  @override
-  void initState() {
-    super.initState();
-    getid();
-
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  double get offset =>
-      _scrollController.hasClients ? _scrollController.offset : 0.0;
 
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Stack(
-        children: <Widget>[
-          Positioned(
-            top: -0.3 * offset,
-            left: 0,
-            right: 0,
-            height: screenHeight,
-            child: RepaintBoundary(
-              child: Image.asset(
-                'assets/sky.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 0.2 * screenHeight,
-            left: 0,
-            right: 0,
-            child: MainText(),
-          ),
-          Positioned(
-            top: screenHeight * 0.55 - 0.65 * offset,
-            right: 0,
-            left: 0,
-            height: screenHeight * 0.4,
-            child: RepaintBoundary(
-              child: Image.asset(
-                'assets/pyramid.png',
-                fit: BoxFit.cover,
-                alignment: Alignment(0, -0.2),
-              ),
-            ),
-          ),
-          Positioned(
-            top: screenHeight * 0.8 - 1 * offset,
-            left: 0,
-            right: 0,
-            height: screenHeight / 3,
-            child: RepaintBoundary(
-              child: Image.asset(
-                'assets/sand.png',
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          Positioned(
-            top: screenHeight * 0.9 - 1 * offset,
-            left: 0,
-            right: 0,
-            height: screenHeight * 0.2,
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0, 1],
-                  colors: [backgroundColor.withOpacity(0), backgroundColor],
-                ),
-              ),
-            ),
-          ),
-//              Positioned(
-//                top: screenHeight * 0.95 - 1 * offset,
-//                left: 0,
-//                right: 0,
-//                height: screenHeight / 3,
-//                child: Container(
-//                  height: screenHeight / 3,
-//                  width: double.infinity,
-//                  color: backgroundColor,
-//                ),
-//              ),
-          Scrollbar(
-            child: ListView(
-              cacheExtent: 64,
-              controller: _scrollController,
-              children: <Widget>[
-                Container(height: screenHeight),
-                Container(
-                  height: 100,
-                  color: backgroundColor,
-                ),
-                Container(
-                  color: backgroundColor,
-                  child: Page1(),
-                ),
-                Page2(),
-                Page3(),
-                Container(
-                  height: 100,
-                  color: darkerColor,
-                ),
-              ],
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
-    );
-  }
-}
-
-class MainText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          'THE ANCIENT WORLD',
-          style: TextStyle(color: backgroundColor),
-        ),
-        SizedBox(height: 16),
-        Container(
-          height: 1,
-          width: 64,
-          color: backgroundColor,
-        ),
-        SizedBox(height: 32),
-        Text(
-          'Discover the awe-inspiring\nPyramids of Fize and ancient Egypt\'s',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.shortestSide > 400 ? 60 : 40,
-          ),
-        ),
-        SizedBox(height: 32),
-        RotatedBox(
-          quarterTurns: 2,
-          child: Icon(LineIcons.angle_double_up, color: Colors.grey),
-        ),
-        SizedBox(height: 16),
-        Text('SCROLL DOWN', style: TextStyle(color: Colors.grey)),
-      ],
-    );
-  }
-}
-
-class Page1 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return FractionallySizedBox(
-      widthFactor: 0.7,
-      child: Column(
-        children: <Widget>[
-          Text(
-            'THE ANCIENT',
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 12),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Egyptian',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-              ),
-              Text(
-                ' civilization',
-                style: TextStyle(color: Colors.black, fontSize: 30),
-              )
-            ],
-          ),
-          SizedBox(height: height * 0.1),
-          if (width > 440)
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    'The ancient Egyptian civilization, famous for its pyramids, pharaohs, mummies, and tombs, flourished for thousands for thousands of yers. But what was its lasting impact?',
-                  ),
-                ),
-                SizedBox(width: 64),
-                Expanded(
-                  child: Text(
-                    'Watch the video below to learn how ancient Egypt contributed to modern-day society with its many cultural developments, particularly in language & mathematics',
-                  ),
-                )
-              ],
-            )
-          else ...[
-            Text(
-              'The ancient Egyptian civilization, famous for its pyramids, pharaohs, mummies, and tombs, flourished for thousands for thousands of yers. But what was its lasting impact?',
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Watch the video below to learn how ancient Egypt contributed to modern-day society with its many cultural developments, particularly in language & mathematics',
-            )
-          ],
-          SizedBox(height: height * 0.1),
-        ],
-      ),
-    );
-  }
-}
-
-class Page2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      color: backgroundColor,
-      height: height > width ? height * 0.5 : height * 0.8,
-      width: double.infinity,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: height * 0.4,
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(
-                'CIVILIZATION',
-                style: TextStyle(
-                  color: darkerColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: height * 0.4,
-            child: Container(
-              color: darkerColor,
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/camel.png',
-                  fit: BoxFit.fitWidth,
-                ),
-                Icon(
-                  Icons.play_circle_outline,
-                  size: 100,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Page3 extends StatefulWidget {
-  @override
-  _Page3State createState() => _Page3State();
-}
-
-class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    Future.delayed(
-      Duration(milliseconds: 1000),
-      () {
-        if (mounted) _animationController.forward();
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      color: darkerColor,
-      child: FractionallySizedBox(
-        widthFactor: 0.7,
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: height * 0.1),
-            Text('10 THINGS', style: TextStyle(color: Colors.black)),
-            SizedBox(height: height * 0.05),
-            _header(),
-            SizedBox(height: height * 0.1),
-            if (width > height)
-              Row(
-                children: <Widget>[
-                  Expanded(child: _leftSide(width)),
-                  SizedBox(width: width * 0.1),
-                  Expanded(child: _rightSide(height, width))
-                ],
-              )
-            else ...[
-              _leftSide(width),
-              _rightSide(height, width),
-            ],
-            SizedBox(height: height * 0.1),
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  RichText _header() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 40,
-          fontFamily: 'IbarraRealNova',
-        ),
-        children: [
-          TextSpan(
-            text: 'You probably didn\'t know\n',
-          ),
-          TextSpan(
-            text: 'about ',
-          ),
-          TextSpan(
-            text: 'ancient Egypt',
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'IbarraRealNova',
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _rightSide(double height, double width) {
-    return Container(
-      height: height / 2,
-      child: Stack(
-        alignment: Alignment(0, 0.5),
-        children: <Widget>[
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, _) {
-              return Transform.rotate(
-                angle: _animationController.value * 0.5 * pi - pi * 0.7,
-                child: Container(
-                  width: 360,
-                  height: 360,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.white.withOpacity(0.7),
-                        Colors.white.withOpacity(0),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          Image.asset('assets/pharaon.png'),
-        ],
-      ),
-    );
-  }
-
-  Widget _leftSide(double width) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          'His original name was\nNot Tutankhamun',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 38,
-          ),
-        ),
-        SizedBox(height: 32),
-        Text(
-          'Tutankhamun was originally named Tutanhaten. This name, whic literally means "living image of the Aten", reflected the fact that Tutankhaten\'s parents worshipped a sun god known as "the Aten". After a few years on the throne the young king.',
-          style: TextStyle(fontSize: 24),
-        ),
-        SizedBox(height: 32),
-        Text(
-          'Read More',
-          style: TextStyle(
-            decoration: TextDecoration.underline,
-            color: Colors.black,
-            fontSize: 24,
-          ),
-        ),
-      ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
